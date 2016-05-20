@@ -15,5 +15,5 @@ The goals of it are:
   + See if I can write fluent C programs.
   + There is no seventh goal.
 
-Currently, I am porting my old code from `https://github.com/qwert42/Raytracer`,
+Currently, I am porting my old code from `https://github.com/qwert42/Raytracing`,
 which is a naive raytracer implemented in C++.
