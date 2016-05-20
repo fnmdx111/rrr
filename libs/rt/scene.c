@@ -2,9 +2,9 @@
 // Created by wo on 5/18/16.
 //
 
-#include <lua.h>
-#include <lauxlib.h>
-#include <lualib.h>
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
 #include "scene.h"
 
 void

@@ -76,8 +76,8 @@ hit_tri(r_surf_triangle* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
                                              MUL_fp4v(d, blmkc))))));
 
   i4v ret = _mm_set1_epi32(UINT32_MAX);
-  ret = FILTER_BY_i4v(LT_fp4v(t, t0), ret);
-  ret = FILTER_BY_i4v(GT_fp4v(t, t1), ret);
+  ret = FILTER_BY_i4v(LT_fp4v(t, SET1_fp4v(t0)), ret);
+  ret = FILTER_BY_i4v(GT_fp4v(t, SET1_fp4v(t1)), ret);
   if (ALL_ZERO_i4v(ret)) {
     return ret;
   }
@@ -117,9 +117,15 @@ hit(r_surf_* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
   }
 
   switch (surf->SURF_TYPE) {
-  case surf_triangle_type:
+  case SURF_TYPE_TRIANGLE:
     return hit_tri((r_surf_triangle*) surf, ray, isc, t0, t1);
   default:
     exit(0);
   }
+}
+
+void
+make_surf_tri(r_surf_triangle* tri, p31v* p, p31v* q, p31v* r)
+{
+
 }

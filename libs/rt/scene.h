@@ -30,7 +30,7 @@ struct scene
   r_camera cam;
 };
 
-#define push_surf(scene, surfp) aarr_push(&((scene)->surfs), r_surf_*, &((r_surf_*) (surfp)))
+#define push_surf(scene, surfp) aarr_push(&((scene)->surfs), r_surf_*, (r_surf_**) (&(surfp)))
 
 typedef struct scene r_scene;
 

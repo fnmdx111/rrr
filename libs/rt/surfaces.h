@@ -22,31 +22,34 @@ typedef struct aabb r_aabb;
 {\
   char SURF_TYPE;\
   r_aabb aabb;
-#define end(w, k) };\
-typedef struct surf_ ## w r_surf_ ## w;\
-const int surf_ ## w ## _type = k;
+#define end(w) };\
+typedef struct surf_ ## w r_surf_ ## w;
 
 #define def_p(x) p31v x; p34v x ## s;
 #define def_v(x) v31v x; v34v x ## s;
 #define def_s(x) fp1v x; fp4v x ## s;
 
 surface()
-end(, 0)
+end()
+#define SURF_TYPE_ 0
 
 surface(triangle)
   def_p(p)
   def_p(q)
   def_p(r)
   def_v(n)
-end(triangle, 1)
+end(triangle)
+#define SURF_TYPE_TRIANGLE 1
 
 surface(bezier)
-end(bezier, 2)
+end(bezier)
+#define SURF_TYPE_BEZIER 2
 
 surface(sphere)
   def_p(o)
   def_s(r)
-end(sphere, 3)
+end(sphere)
+#define SURF_TYPE_SPHERE 3
 
 #undef surface
 #undef end
