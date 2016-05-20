@@ -6,7 +6,7 @@
 #define RRR_RAY_PK4_H
 
 #include <emmintrin.h>
-#include "libs/vecp.h"
+#include "../math/vecp.h"
 
 struct ray_pk4
 {

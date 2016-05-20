@@ -6,7 +6,7 @@
 #define RRR_VEC_H
 
 #include "vecp.h"
-#include "portable.h"
+#include "../portable.h"
 
 
 struct vec3_t

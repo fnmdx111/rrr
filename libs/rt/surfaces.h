@@ -5,10 +5,10 @@
 #ifndef RRR_SURFACES_H
 #define RRR_SURFACES_H
 
-#include "libs/vecp.h"
-#include "libs/vec.h"
+#include "../math/vecp.h"
+#include "../math/vec.h"
 #include "ray_pk4.h"
-#include "libs/portable.h"
+#include "../portable.h"
 
 struct aabb
 {

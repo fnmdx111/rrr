@@ -3,7 +3,7 @@
 //
 
 #include "surfaces.h"
-#include "libs/portable.h"
+#include "../portable.h"
 
 i4v
 hit_aabb(r_aabb* aabb, rp4* ray, fp1v t0, fp1v t1)

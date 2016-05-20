@@ -7,7 +7,7 @@
 
 #include "surfaces.h"
 #include "lights.h"
-#include "libs/generic/aarr.h"
+#include "../generic/aarr.h"
 
 struct camera
 {

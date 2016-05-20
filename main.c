@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "libs/vecp.h"
+#include "libs/math/vecp.h"
 
 int
 main()

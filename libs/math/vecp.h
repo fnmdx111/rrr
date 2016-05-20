@@ -7,7 +7,7 @@
 
 #include <xmmintrin.h>
 #include <immintrin.h>
-#include "portable.h"
+#include "../portable.h"
 
 struct vec_pk4_t
 {
