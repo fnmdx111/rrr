@@ -5,7 +5,6 @@
 #ifndef RRR_VEC_H
 #define RRR_VEC_H
 
-#include "vecp.h"
 #include "../portable.h"
 
 

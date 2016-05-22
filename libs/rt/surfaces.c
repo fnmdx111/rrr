@@ -100,7 +100,7 @@ hit_tri(r_surf_triangle* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
     return ret;
   }
 
-  isc->surf = (r_surf_*) surf;
+  isc->surf = (r_surf*) surf;
   isc->ts = AND_fp4v((__m128) ret, t);
   isc->ns.xs = AND_fp4v((__m128) ret, surf->ns.xs);
   isc->ns.ys = AND_fp4v((__m128) ret, surf->ns.ys);
@@ -110,14 +110,14 @@ hit_tri(r_surf_triangle* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
 }
 
 i4v
-hit(r_surf_* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
+hit(r_surf* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
 {
   if (ALL_ZERO_i4v(hit_aabb(&(surf->aabb), ray, t0, t1))) {
     return _mm_set1_epi32(0);
   }
 
-  switch (surf->SURF_TYPE) {
-  case SURF_TYPE_TRIANGLE:
+  switch (surf->type) {
+  case SURF_TRIANGLE:
     return hit_tri((r_surf_triangle*) surf, ray, isc, t0, t1);
   default:
     exit(0);

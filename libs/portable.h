@@ -16,6 +16,7 @@ typedef float  fp1v;
 #define MUL_fp4v(a, b) _mm_mul_ps(a, b)
 #define ADD_fp4v(a, b) _mm_add_ps(a, b)
 #define SUB_fp4v(a, b) _mm_sub_ps(a, b)
+#define DIV_fp4v(a, b) _mm_div_ps(a, b)
 #define SET_fp4v(a, b, c, d) _mm_set_ps(a, b, c, d)
 #define RSQRT_fp4v(a) _mm_rsqrt_ps(a)
 #define RCP_fp4v(a) _mm_rcp_ps(a)
@@ -37,6 +38,8 @@ typedef float  fp1v;
 #define GT_MASK_fp4v(a, b) CMP_MASK_fp4v(a, b, 30)
 #define XOR_fp4v(a, b) _mm_xor_ps(a, b)
 #define NEG_fp4v(a)  XOR_fp4v(SET1_fp4v(0x80000000), a)
+#define SQRT_fp4v(a) _mm_sqrt_ps(a)
+#define EXTR_fp4v(a, i) _mm_extract_ps(a, i)
 
 #define CVT_FP2I_fp4v(a) _mm_cvtps_epi32(a)
 #define ALL_ZERO_i4v(a) (_mm_testz_si128(a, a) == 0)

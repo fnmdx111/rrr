@@ -1,36 +1,39 @@
 #include <stdio.h>
-#include "libs/math/vecp.h"
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+#include "libs/scripting/scene.h"
+#include "libs/scripting/obj_buf.h"
+#include "libs/math/vcommon.h"
+
+const static struct luaL_Reg static_init_funcs[] = {
+  {"create_scene", l_create_scene},
+  {"create_camera", l_create_camera},
+  {"append_wavefront_obj", l_append_wavefront_object},
+  {NULL, NULL}
+};
+
+void
+rl_static_init(lua_State* L)
+{
+  install_scene_metatables(L);
+  install_buf_metatables(L);
+}
 
 int
-main()
+main(int argc, char** argv)
 {
-  MAKE_VP4(vs1);
-  MAKE_VP4(vs2);
+  lua_State* L = luaL_newstate();
+  luaL_openlibs(L);
+  rl_static_init(L);
 
-  vp4_load4(vs1,
-            0.1, 0.2, 0.3,
-            0.3, 0.2, 0.1,
-            0.2, 0.2, 0.2,
-            0.3, 0.1, 0.2);
-  vp4_load4(vs2,
-            0.3, 0.3, 0.3,
-            0.2, 0.2, 0.2,
-            0.1, 0.1, 0.1,
-            0.1, 0.2, 0.3);
+  luaL_dofile(L, argv[1]);
 
-  fp4v ret = vp4_dot(vs1, vs2);
+  lua_getglobal(L, "scene");
+  struct rl_scene* s = check_scene(L, -1);
+  p_v34v(&s->hnd->cam->dir);
 
-  printf("%f %f %f %f\n",
-         ATTR_FV4(ret, 0), ATTR_FV4(ret, 1),
-         ATTR_FV4(ret, 2), ATTR_FV4(ret, 3));
-
-  MAKE_VP4(vs3);
-  vp4_cross(vs3, vs1, vs2);
-  vp4_normalize(vs3);
-
-  FREE_VP4(vs1);
-  FREE_VP4(vs2);
-  FREE_VP4(vs3);
+  lua_close(L);
 
   return 0;
 }

@@ -66,22 +66,49 @@ vp4_cross(v34v *r, v34v *p, v34v *q)
 inline void
 vp4_add(v34v *r, v34v *p, v34v *q)
 {
-  r->xs = p->xs + q->xs;
-  r->ys = p->ys + q->ys;
-  r->zs = p->zs + q->zs;
+  r->xs = ADD_fp4v(p->xs, q->xs);
+  r->ys = ADD_fp4v(p->ys, q->ys);
+  r->zs = ADD_fp4v(p->zs, q->zs);
 }
 
 inline void
-vp4_normalize(v34v* r)
+vp4_sub(v34v* r, v34v* p, v34v *q)
 {
-  fp4v xsq = MUL_fp4v(r->xs, r->xs);
-  fp4v ysq = MUL_fp4v(r->ys, r->ys);
-  fp4v zsq = MUL_fp4v(r->zs, r->zs);
+  r->xs = SUB_fp4v(p->xs, q->xs);
+  r->ys = SUB_fp4v(p->ys, q->ys);
+  r->zs = SUB_fp4v(p->zs, q->zs);
+}
+
+inline void
+vp4_normalize(v34v* r, v34v* p)
+{
+  fp4v xsq = MUL_fp4v(p->xs, p->xs);
+  fp4v ysq = MUL_fp4v(p->ys, p->ys);
+  fp4v zsq = MUL_fp4v(p->zs, p->zs);
   fp4v xyzsq = ADD_fp4v(xsq, ysq);
   xyzsq = ADD_fp4v(xyzsq, zsq);
 
   fp4v rxyzsq = RSQRT_fp4v(xyzsq);
-  r->xs = MUL_fp4v(r->xs, rxyzsq);
-  r->ys = MUL_fp4v(r->ys, rxyzsq);
-  r->zs = MUL_fp4v(r->zs, rxyzsq);
+  r->xs = MUL_fp4v(p->xs, rxyzsq);
+  r->ys = MUL_fp4v(p->ys, rxyzsq);
+  r->zs = MUL_fp4v(p->zs, rxyzsq);
+}
+
+inline fp4v
+vp4_norm(v34v* p)
+{
+  fp4v xsq = MUL_fp4v(p->xs, p->xs);
+  fp4v ysq = MUL_fp4v(p->ys, p->ys);
+  fp4v zsq = MUL_fp4v(p->zs, p->zs);
+  fp4v xyzsq = ADD_fp4v(ADD_fp4v(xsq, ysq), zsq);
+
+  return SQRT_fp4v(xyzsq);
+}
+
+inline void
+vp4_neg(v34v* r, v34v* p)
+{
+  r->xs = NEG_fp4v(p->xs);
+  r->ys = NEG_fp4v(p->ys);
+  r->zs = NEG_fp4v(p->zs);
 }

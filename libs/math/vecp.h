@@ -16,8 +16,8 @@ struct vec_pk4_t
 
 #define MAKE_VP4(x) v34v* x = (v34v*) malloc(sizeof(v34v))
 #define FREE_VP4(x) free(x)
-#define ATTR_FV4(x, k) (x)[k]
-#define ATTR_VP4(x, d, k) ATTR_FV4(x->d ## s)
+#define ATTR_FV4(x, k) (EXTR_fp4v(x, (k)))
+#define ATTR_VP4(x, d, k) (ATTR_FV4(x->d ## s, k))
 
 typedef struct vec_pk4_t v34v;
 typedef struct vec_pk4_t p34v;
@@ -48,4 +48,13 @@ void
 vp4_add(v34v *r, v34v *p, v34v *q);
 
 void
-vp4_normalize(v34v* r);
+vp4_sub(v34v* r, v34v* p, v34v* q);
+
+void
+vp4_neg(v34v* r, v34v* p);
+
+void
+vp4_normalize(v34v* r, v34v* p);
+
+fp4v
+vp4_norm(v34v* r);

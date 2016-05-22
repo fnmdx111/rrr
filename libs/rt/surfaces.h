@@ -20,18 +20,13 @@ typedef struct aabb r_aabb;
 
 #define surface(w) struct surf_ ## w\
 {\
-  char SURF_TYPE;\
-  r_aabb aabb;
+
 #define end(w) };\
 typedef struct surf_ ## w r_surf_ ## w;
 
-#define def_p(x) p31v x; p34v x ## s;
-#define def_v(x) v31v x; v34v x ## s;
-#define def_s(x) fp1v x; fp4v x ## s;
-
-surface()
-end()
-#define SURF_TYPE_ 0
+#define def_p(x) p34v x ## s;
+#define def_v(x) v34v x ## s;
+#define def_s(x) fp4v x ## s;
 
 surface(triangle)
   def_p(p)
@@ -39,17 +34,14 @@ surface(triangle)
   def_p(r)
   def_v(n)
 end(triangle)
-#define SURF_TYPE_TRIANGLE 1
 
 surface(bezier)
 end(bezier)
-#define SURF_TYPE_BEZIER 2
 
 surface(sphere)
   def_p(o)
   def_s(r)
 end(sphere)
-#define SURF_TYPE_SPHERE 3
 
 #undef surface
 #undef end
@@ -57,9 +49,28 @@ end(sphere)
 #undef def_s
 #undef def_v
 
+enum r_surf_types
+{
+  SURF_TRIANGLE,
+  SURF_BEZIER,
+  SURF_SPHERE
+};
+
+struct r_surf
+{
+  enum r_surf_types type;
+  r_aabb aabb;
+  union {
+    r_surf_triangle triangle;
+    r_surf_bezier bezier;
+    r_surf_sphere sphere;
+  };
+};
+typedef struct r_surf r_surf;
+
 struct isect_pk4_t
 {
-  r_surf_* surf;
+  struct r_surf* surf;
   fp4v ts;
   v34v ns;
 };
@@ -69,7 +80,7 @@ void
 make_surf_tri(r_surf_triangle* tri, p31v* p, p31v* q, p31v* r);
 
 i4v
-hit(r_surf_* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1);
+hit(r_surf* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1);
 
 i4v
 hit_aabb(r_aabb* aabb, rp4* ray, fp1v t0, fp1v t1);

@@ -9,11 +9,33 @@
 #include "lights.h"
 #include "../generic/aarr.h"
 
+struct rgba
+{
+  fp1v r, g, b, a;
+};
+typedef struct rgba r_rgba;
+
+void
+make_rgba(r_rgba* rgba, fp1v r, fp1v g, fp1v b, fp1v a);
+
 struct camera
 {
-
+  p34v pos, dir, u, v, w;
+  fp4v d, img_w, img_h;
+  fp4v pxl_w, pxl_h;
+  fp4v r, l, t, b;
+  fp4v lens;
+  fp4v aperture_size;
 };
 typedef struct camera r_camera;
+
+void
+make_camera(r_camera* cam,
+            p31v pos, v31v dir,
+            fp1v d,
+            fp1v img_w, fp1v img_h,
+            int pxl_w, int pxl_h,
+            fp1v lens, fp1v aperture_size);
 
 struct material
 {
@@ -23,14 +45,14 @@ typedef struct material r_mtr;
 
 struct scene
 {
-  struct r_aarr surfs;
-  struct r_aarr lights;
-  struct r_aarr materials;
+  struct r_aarr* surfs;
+  struct r_aarr* lights;
+  struct r_aarr* materials;
 
-  r_camera cam;
+  r_camera* cam;
 };
 
-#define push_surf(scene, surfp) aarr_push(&((scene)->surfs), r_surf_*, (r_surf_**) (&(surfp)))
+#define push_surf(scene, surfp) aarr_push((scene)->surfs, r_surf, &surfp)
 
 typedef struct scene r_scene;
 
@@ -44,9 +66,12 @@ void
 init_scene_by_config(r_scene* scene, char* fn);
 
 void
-load_wavefront_object(r_scene* scene, char* fn);
+append_wavefront_object(struct r_aarr *buf, const char *fn);
 
 void
 destroy_scene(r_scene* scene);
+
+void
+render(r_scene* scene);
 
 #endif //RRR_SCENE_H
