@@ -123,8 +123,8 @@ make_camera(r_camera* cam,
             int pxl_w, int pxl_h,
             fp1v lens, fp1v aperture_size)
 {
-  cam->pos = v1_tovp4(&pos);
-  cam->dir = v1_tovp4(&dir);
+  v1_tovp4(&cam->pos, &pos);
+  v1_tovp4(&cam->dir, &dir);
 
   v34v up;
   vp4_load1(&up, 0.f, 1.f, 0.f);
@@ -153,4 +153,10 @@ make_camera(r_camera* cam,
 
   cam->lens = SET1_fp4v(lens);
   cam->aperture_size = SET1_fp4v(aperture_size);
+}
+
+void
+render(r_scene* scene)
+{
+  printf("Rendering...\n");
 }

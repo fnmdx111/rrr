@@ -15,9 +15,11 @@ hit_aabb(r_aabb* aabb, rp4* ray, fp1v t0, fp1v t1)
   fp4v tfar = SET1_fp4v(t1);
   fp4v which_normal = ZERO_fp4v();
 #define test(axis) do {\
+  fp4v axis ## min4 = SET1_fp4v(aabb->axis ## min);\
+  fp4v axis ## max4 = SET1_fp4v(aabb->axis ## max);\
   fp4v rep_d = RCP_fp4v(ray->d. axis ## s);\
-  fp4v tmin = MUL_fp4v(rep_d, SUB_fp4v(aabb-> axis ## min4, ray->d. axis ## s));\
-  fp4v tmax = MUL_fp4v(rep_d, SUB_fp4v(aabb-> axis ## max4, ray->d. axis ## s));\
+  fp4v tmin = MUL_fp4v(rep_d, SUB_fp4v(axis ## min4, ray->d. axis ## s));\
+  fp4v tmax = MUL_fp4v(rep_d, SUB_fp4v(axis ## max4, ray->d. axis ## s));\
 \
   fp4v zero = ZERO_fp4v();\
   mask = LT_fp4v(rep_d, zero);\
@@ -38,6 +40,7 @@ hit_aabb(r_aabb* aabb, rp4* ray, fp1v t0, fp1v t1)
   test(x);
   test(y);
   test(z);
+#undef test
 
   return ret;
 }
@@ -47,18 +50,30 @@ hit_tri(r_surf_triangle* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
 {
 #define def(x, z) fp4v x = (z)
 
-  def(a, SUB_fp4v(surf->ps.xs, surf->qs.xs));
-  def(b, SUB_fp4v(surf->ps.ys, surf->qs.ys));
-  def(c, SUB_fp4v(surf->ps.zs, surf->qs.zs));
-  def(d, SUB_fp4v(surf->ps.xs, surf->rs.xs));
-  def(e, SUB_fp4v(surf->ps.ys, surf->rs.ys));
-  def(f, SUB_fp4v(surf->ps.zs, surf->rs.zs));
+  v34v ps, qs, rs, ns;
+  vp4_load1(&ps, surf->p.x, surf->p.y, surf->p.z);
+  vp4_load1(&qs, surf->q.x, surf->q.y, surf->q.z);
+  vp4_load1(&rs, surf->r.x, surf->r.y, surf->r.z);
+  vp4_load1(&ns, surf->n.x, surf->n.y, surf->n.z);
+
+#define a(p, x) (p ## s.x ## s)
+#define ap(x) a(p, x)
+#define aq(x) a(q, x)
+#define ar(x) a(r, x)
+#define an(x) a(n, x)
+
+  def(a, SUB_fp4v(ap(x), aq(x)));
+  def(b, SUB_fp4v(ap(y), aq(y)));
+  def(c, SUB_fp4v(ap(z), aq(z)));
+  def(d, SUB_fp4v(ap(x), ar(x)));
+  def(e, SUB_fp4v(ap(y), ar(y)));
+  def(f, SUB_fp4v(ap(z), ar(z)));
   def(g, ray->d.xs);
   def(h, ray->d.ys);
   def(i, ray->d.zs);
-  def(j, SUB_fp4v(surf->ps.xs, ray->e.xs));
-  def(k, SUB_fp4v(surf->ps.ys, ray->e.ys));
-  def(l, SUB_fp4v(surf->ps.zs, ray->e.zs));
+  def(j, SUB_fp4v(ap(x), ray->e.xs));
+  def(k, SUB_fp4v(ap(y), ray->e.ys));
+  def(l, SUB_fp4v(ap(z), ray->e.zs));
 
   def(eimhf, SUB_fp4v(MUL_fp4v(e, i), MUL_fp4v(h, f)));
   def(gfmdi, SUB_fp4v(MUL_fp4v(g, f), MUL_fp4v(d, i)));
@@ -102,9 +117,16 @@ hit_tri(r_surf_triangle* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
 
   isc->surf = (r_surf*) surf;
   isc->ts = AND_fp4v((__m128) ret, t);
-  isc->ns.xs = AND_fp4v((__m128) ret, surf->ns.xs);
-  isc->ns.ys = AND_fp4v((__m128) ret, surf->ns.ys);
-  isc->ns.zs = AND_fp4v((__m128) ret, surf->ns.zs);
+  isc->ns.xs = AND_fp4v((__m128) ret, an(x));
+  isc->ns.ys = AND_fp4v((__m128) ret, an(y));
+  isc->ns.zs = AND_fp4v((__m128) ret, an(z));
+
+#undef a
+#undef ap
+#undef aq
+#undef ar
+#undef an
+#undef def
 
   return ret;
 }

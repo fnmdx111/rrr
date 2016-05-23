@@ -13,7 +13,6 @@
 struct aabb
 {
   fp1v xmin, xmax, ymin, ymax, zmin, zmax;
-  fp4v xmin4, xmax4, ymin4, ymax4, zmin4, zmax4;
 };
 
 typedef struct aabb r_aabb;
@@ -24,9 +23,9 @@ typedef struct aabb r_aabb;
 #define end(w) };\
 typedef struct surf_ ## w r_surf_ ## w;
 
-#define def_p(x) p34v x ## s;
-#define def_v(x) v34v x ## s;
-#define def_s(x) fp4v x ## s;
+#define def_p(x) p31v x;
+#define def_v(x) v31v x;
+#define def_s(x) fp1v x;
 
 surface(triangle)
   def_p(p)
