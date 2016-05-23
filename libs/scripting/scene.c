@@ -9,20 +9,18 @@
 #include "obj_buf.h"
 
 const static struct luaL_Reg rl_scene_funcs[] = {
-  {"new", l_create_scene},
   {"render", l_render},
   {"install_camera", l_install_camera},
   {"install_surf_buf", l_install_surf_buf},
   {"surf_buf", l_get_surf_buf},
   {"install_light_buf", l_install_light_buf},
-  {"light_buf", l_get_light_buf},
+//  {"light_buf", l_get_light_buf},
   {"install_material_buf", l_install_material_buf},
-  {"material_buf", l_get_material_buf},
+//  {"material_buf", l_get_material_buf},
   {NULL, NULL}
 };
 
 const static struct luaL_Reg rl_camera_funcs[] = {
-  {"new", l_create_camera},
   {NULL, NULL}
 };
 
@@ -30,7 +28,7 @@ int
 __gc_scene(lua_State* L)
 {
   struct rl_scene* s = check_scene(L, 1);
-  free_scene(s->hnd);
+  free_scene(&s->hnd);
 
   return 0;
 }
@@ -53,19 +51,44 @@ install_scene_metatables(lua_State* L)
  * This is not a Lua-side function.
  */
 {
+  /**
+   * RLScene initialization
+   */
   luaL_newmetatable(L, RL_SCENE_METATABLE_KEY);
+
   lua_pushcfunction(L, __gc_scene);
   lua_setfield(L, -2, "__gc");
+
+  lua_pushcfunction(L, l_create_scene);
+  lua_setfield(L, -2, "new");
+
   luaL_newlib(L, rl_scene_funcs);
   lua_setfield(L, -2, "__index");
   lua_setglobal(L, "RLScene");
 
+  /**
+   * RLCamera initialization
+   */
   luaL_newmetatable(L, RL_CAMERA_METATABLE_KEY);
+
   lua_pushcfunction(L, __gc_camera);
   lua_setfield(L, -2, "__gc");
+
+  lua_pushcfunction(L, l_create_camera);
+  lua_setfield(L, -2, "new");
+
   luaL_newlib(L, rl_camera_funcs);
   lua_setfield(L, -2, "__index");
   lua_setglobal(L, "RLCamera");
+}
+
+int
+l_get_surf_buf(lua_State* L)
+{
+  struct rl_scene* s = check_scene(L, 1);
+  lua_pushlightuserdata(L, s->hnd.surfs);
+
+  return 1;
 }
 
 int
@@ -89,19 +112,30 @@ luaopen_scene_camera(lua_State* L)
 int
 l_create_scene(lua_State* L)
 {
-  struct rl_surf_buf* surfs = check_surf_buf(L, 1);
-  struct rl_light_buf* lights = check_light_buf(L, 2);
-  struct rl_material_buf* mtrs = check_material_buf(L, 3);
-  struct rl_camera* camera = check_camera(L, 4);
+  int argc = lua_gettop(L);
+
+  struct rl_surf_buf* surfs = NULL;
+  struct rl_light_buf* lights = NULL;
+  struct rl_material_buf* mtrs = NULL;
+  struct rl_camera* camera = NULL;
+
+  if (argc == 4) {
+    surfs = check_surf_buf(L, 1);
+    lights = check_light_buf(L, 2);
+    mtrs = check_material_buf(L, 3);
+    camera = check_camera(L, 4);
+  }
 
   struct rl_scene* s = lua_newuserdata(L, sizeof(struct rl_scene));
 
   luaL_setmetatable(L, RL_SCENE_METATABLE_KEY);
 
-  s->hnd->surfs = surfs->hnd;
-  s->hnd->lights = lights->hnd;
-  s->hnd->materials = mtrs->hnd;
-  s->hnd->cam = camera->hnd;
+  if (argc == 4) {
+    s->hnd.surfs = &surfs->hnd;
+    s->hnd.lights = &lights->hnd;
+    s->hnd.materials = &mtrs->hnd;
+    s->hnd.cam = RL_CAMP(camera);
+  }
 
   return 1;
 }
@@ -113,7 +147,40 @@ l_install_camera(lua_State* L)
   struct rl_scene* s = check_scene(L, 1);
   struct rl_camera* c = check_camera(L, 2);
 
-  s->hnd->cam = c->hnd;
+  s->hnd.cam = RL_CAMP(c);
+
+  return 0;
+}
+
+int
+l_install_surf_buf(lua_State* L)
+{
+  struct rl_scene* s = check_scene(L, 1);
+  struct rl_surf_buf* buf = check_surf_buf(L, 2);
+
+  s->hnd.surfs = &buf->hnd;
+
+  return 0;
+}
+
+int
+l_install_light_buf(lua_State* L)
+{
+  struct rl_scene* s = check_scene(L, 1);
+  struct rl_light_buf* buf = check_light_buf(L, 2);
+
+  s->hnd.lights = &buf->hnd;
+
+  return 0;
+}
+
+int
+l_install_material_buf(lua_State* L)
+{
+  struct rl_scene* s = check_scene(L, 1);
+  struct rl_material_buf* buf = check_material_buf(L, 2);
+
+  s->hnd.materials = &buf->hnd;
 
   return 0;
 }
@@ -143,6 +210,7 @@ l_create_camera(lua_State* L)
   int pxl_w = (int) lua_tonumber(L, 6);
   int pxl_h = (int) lua_tonumber(L, 7);
 
+
   fp1v lens;
   if (lua_isnoneornil(L, 8)) {
     lens = 1e-8f;
@@ -158,13 +226,25 @@ l_create_camera(lua_State* L)
   }
 
   struct rl_camera* c = lua_newuserdata(L, sizeof(struct rl_camera));
-  make_camera(c->hnd,
+  make_camera(RL_CAMP(c),
               pos, dir,
               d, img_w, img_h,
               pxl_w, pxl_h,
               lens, aperture_size);
 
   luaL_setmetatable(L, RL_CAMERA_METATABLE_KEY);
+
+  return 1;
+#undef getf
+#undef get_fp1v
+#undef get_v31v
+}
+
+int
+l_render(lua_State* L)
+{
+  struct rl_scene* s = check_scene(L, 1);
+  render(&s->hnd);
 
   return 1;
 }

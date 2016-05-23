@@ -8,9 +8,12 @@
 #include "lua.h"
 #include "../generic/aarr.h"
 
+/**
+ * Do not use r_aarr for SSE data structures (e.g. __m128, etc.).
+ */
+
 #define buf_method(c, w)\
-int\
-l_ ## c ## _ ## w ## _buf(lua_State* L);
+int l_ ## c ## _ ## w ## _buf(lua_State* L);
 
 #define create_buf(w) buf_method(create, w)
 #define push_buf(w) buf_method(push, w)
@@ -18,7 +21,7 @@ l_ ## c ## _ ## w ## _buf(lua_State* L);
 
 #define new_buf_type(w)\
 struct rl_ ## w ## _buf {\
-  struct r_aarr* hnd;
+  struct r_aarr hnd;
 
 #define end(w)\
 };\
@@ -42,14 +45,17 @@ end(material)
 new_buf_type(g)
 end(g)
 
+#undef new_buf_type
+#undef end
+
 #define RL_MATERIAL_BUF_MT_KEY "rrr.rl_material_buf"
 
 #define check_surf_buf(L, i)\
   (struct rl_surf_buf*) luaL_checkudata(L, i, RL_SURF_BUF_MT_KEY)
 #define check_light_buf(L, i)\
-  (struct rl_light_buf*) luaL_checkudata(L, 1, RL_LIGHT_BUF_MT_KEY)
+  (struct rl_light_buf*) luaL_checkudata(L, i, RL_LIGHT_BUF_MT_KEY)
 #define check_material_buf(L, i)\
-  (struct rl_material_buf*) luaL_checkudata(L, 1, RL_MATERIAL_BUF_MT_KEY)
+  (struct rl_material_buf*) luaL_checkudata(L, i, RL_MATERIAL_BUF_MT_KEY)
 
 void
 install_buf_metatables(lua_State* L);
