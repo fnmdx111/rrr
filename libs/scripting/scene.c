@@ -86,7 +86,7 @@ int
 l_get_surf_buf(lua_State* L)
 {
   struct rl_scene* s = check_scene(L, 1);
-  lua_pushlightuserdata(L, s->hnd.surfs);
+  create_wrapper(L, (struct rl_g_buf *) s, RL_SURF_BUF_MT_KEY);
 
   return 1;
 }
@@ -131,9 +131,9 @@ l_create_scene(lua_State* L)
   luaL_setmetatable(L, RL_SCENE_METATABLE_KEY);
 
   if (argc == 4) {
-    s->hnd.surfs = &surfs->hnd;
-    s->hnd.lights = &lights->hnd;
-    s->hnd.materials = &mtrs->hnd;
+    s->hnd.surfs = surfs->hnd;
+    s->hnd.lights = lights->hnd;
+    s->hnd.materials = mtrs->hnd;
     s->hnd.cam = RL_CAMP(camera);
   }
 
@@ -158,7 +158,7 @@ l_install_surf_buf(lua_State* L)
   struct rl_scene* s = check_scene(L, 1);
   struct rl_surf_buf* buf = check_surf_buf(L, 2);
 
-  s->hnd.surfs = &buf->hnd;
+  s->hnd.surfs = buf->hnd;
 
   return 0;
 }
@@ -169,7 +169,7 @@ l_install_light_buf(lua_State* L)
   struct rl_scene* s = check_scene(L, 1);
   struct rl_light_buf* buf = check_light_buf(L, 2);
 
-  s->hnd.lights = &buf->hnd;
+  s->hnd.lights = buf->hnd;
 
   return 0;
 }
@@ -180,7 +180,7 @@ l_install_material_buf(lua_State* L)
   struct rl_scene* s = check_scene(L, 1);
   struct rl_material_buf* buf = check_material_buf(L, 2);
 
-  s->hnd.materials = &buf->hnd;
+  s->hnd.materials = buf->hnd;
 
   return 0;
 }

@@ -8,10 +8,6 @@
 #include "lua.h"
 #include "../generic/aarr.h"
 
-/**
- * Do not use r_aarr for SSE data structures (e.g. __m128, etc.).
- */
-
 #define buf_method(c, w)\
 int l_ ## c ## _ ## w ## _buf(lua_State* L);
 
@@ -21,7 +17,7 @@ int l_ ## c ## _ ## w ## _buf(lua_State* L);
 
 #define new_buf_type(w)\
 struct rl_ ## w ## _buf {\
-  struct r_aarr hnd;
+  struct r_aarr* hnd;
 
 #define end(w)\
 };\
@@ -65,5 +61,8 @@ l_append_wavefront_object(lua_State *L);
 
 int
 l_add_surface(lua_State* L);
+
+void
+create_wrapper(lua_State* L, struct rl_g_buf* buf, const char* mt_key);
 
 #endif //RRR_SURF_BUF_H
