@@ -37,9 +37,28 @@ make_camera(r_camera* cam,
             int pxl_w, int pxl_h,
             fp1v lens, fp1v aperture_size);
 
-struct material
+struct r_mtr_phong_bling
 {
 
+};
+
+struct r_mtr_custom_shading
+{
+  SHADING_FUNC shader;
+};
+
+enum r_mtr_type
+{
+  PHONG_BLING,
+  CUSTOM
+};
+struct material
+{
+  enum r_mtr_type type;
+  union {
+    struct r_mtr_phong_bling phong_bling;
+    struct r_mtr_custom_shading custom;
+  };
 };
 typedef struct material r_mtr;
 

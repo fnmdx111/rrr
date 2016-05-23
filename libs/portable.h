@@ -9,6 +9,10 @@
 #include <immintrin.h>
 #include <smmintrin.h>
 
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+
 typedef __m128 fp4v;
 typedef __m128i ptr4v;
 typedef __m128i i4v;
@@ -46,6 +50,8 @@ typedef float  fp1v;
 #define FILTER_BY_i4v(cond, a) _mm_andnot_si128((__m128i) (cond), a)
 
 #define FPFMT "%f"
+
+#define SHADING_FUNC lua_CFunction
 
 #include <float.h>
 #define FP1V_MAX FLT_MAX
