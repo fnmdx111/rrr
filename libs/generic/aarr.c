@@ -5,12 +5,14 @@
 #include <assert.h>
 #include <string.h>
 #include "aarr.h"
+#include "../portable.h"
 
 struct __r_aarr_chunk*
 make_chunk(size_t unit_size)
 {
-  struct __r_aarr_chunk* ret = (struct __r_aarr_chunk*)
-    malloc(sizeof(struct __r_aarr_chunk));
+  struct __r_aarr_chunk* ret;
+  posix_memalign((void**) &ret, 16, sizeof(struct __r_aarr_chunk));
+
   assert(ret != 0);
 
   ret->d = calloc(INIT_CHUNK_SIZE, unit_size);
@@ -31,8 +33,8 @@ free_chunk(struct __r_aarr_chunk* chunk)
 struct __r_aarr_chunk*
 resize_chunk(struct __r_aarr_chunk* o, size_t unit_size, size_t new_size)
 {
-  struct __r_aarr_chunk* ret = (struct __r_aarr_chunk*)
-    malloc(sizeof(struct __r_aarr_chunk));
+  struct __r_aarr_chunk* ret;
+  posix_memalign((void**) &ret, 16, sizeof(struct __r_aarr_chunk));
   assert(ret != 0);
 
   ret->d = calloc(new_size, unit_size);

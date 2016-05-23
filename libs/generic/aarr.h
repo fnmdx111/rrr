@@ -83,8 +83,8 @@ void
 try_resize_chunks(struct r_aarr* l);
 
 #define new_aarr(l, u, isz)\
- struct r_aarr* l = (struct r_aarr*) malloc(sizeof(struct r_aarr));\
- make_aarr(l, sizeof(u), isz)
+  struct r_aarr* l = (struct r_aarr*) malloc(sizeof(struct r_aarr));\
+  make_aarr(l, sizeof(u), isz)
 
 #define del_aarr(l)\
   free_aarr(l);\
