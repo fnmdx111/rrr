@@ -48,7 +48,7 @@ end(sphere)
 #undef def_s
 #undef def_v
 
-enum r_surf_types
+enum r_surf_type
 {
   SURF_TRIANGLE,
   SURF_BEZIER,
@@ -57,7 +57,7 @@ enum r_surf_types
 
 struct r_surf
 {
-  enum r_surf_types type;
+  enum r_surf_type type;
   r_aabb aabb;
   union {
     r_surf_triangle triangle;
@@ -69,9 +69,9 @@ typedef struct r_surf r_surf;
 
 struct isect_pk4_t
 {
-  struct r_surf* surf;
   fp4v ts;
   v34v ns;
+  struct r_surf* surf;
 };
 typedef struct isect_pk4_t isc4v;
 
