@@ -7,9 +7,9 @@
 inline void
 vp4_load1(v34v* v, fp1v x, fp1v y, fp1v z)
 {
-  v->xs = SET_fp4v(x, x, x, x);
-  v->ys = SET_fp4v(y, y, y, y);
-  v->zs = SET_fp4v(z, z, z, z);
+  v->xs = SET1_fp4v(x);
+  v->ys = SET1_fp4v(y);
+  v->zs = SET1_fp4v(z);
 }
 
 inline void

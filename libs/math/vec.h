@@ -7,13 +7,12 @@
 
 #include "../portable.h"
 
-
-struct vec3_t
+struct vec3
 {
   fp1v x, y, z;
 };
 
-typedef struct vec3_t v31v;
-typedef struct vec3_t p31v;
+typedef struct vec3 v31v;
+typedef struct vec3 p31v;
 
 #endif //RRR_VEC_H

@@ -8,11 +8,11 @@
 #include "vec.h"
 #include "vecp.h"
 
-v31v
-vp4_tov1(v34v* r, char type);
+void
+vp4_tov1(v31v* r, v34v* p, char type);
 
-v34v
-v1_tovp4(v31v* r);
+void
+v1_tovp4(v34v* r, v31v* p);
 
 void
 p_v34v(v34v* r);

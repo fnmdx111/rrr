@@ -14,9 +14,12 @@ struct vec_pk4_t
   fp4v xs, ys, zs;
 };
 
-#define MAKE_VP4(x) v34v* x = (v34v*) malloc(sizeof(v34v))
+#define MAKE_VP4(x) v34v* x = (v34v*) malloc_(sizeof(v34v))
 #define FREE_VP4(x) free(x)
-#define ATTR_FV4(x, k) (EXTR_fp4v(x, (k)))
+#define ATTR_FV4(x, k) (*(((fp1v*) &x) + k))
+/**
+ * This macro is nasty. Please fix this ASAP.
+ */
 #define ATTR_VP4(x, d, k) (ATTR_FV4(x->d ## s, k))
 
 typedef struct vec_pk4_t v34v;
