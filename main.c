@@ -18,7 +18,7 @@ const static struct luaL_Reg static_init_funcs[] = {
 static void*
 aalloc(void* ud, void* ptr, size_t osize, size_t nsize)
 {
-  (void)ud;
+  (void) ud;
   void* ret;
 
   if (nsize == 0) {
@@ -75,8 +75,6 @@ main(int argc, char** argv)
   lua_atpanic(L, atpanic);
 
   luaL_openlibs(L);
-  // luaL_requiref(L, "_G", luaopen_base, 1);
-  // lua_pop(L, 1);
   rl_static_init(L);
 
   luaL_loadfile(L, argv[1]);
