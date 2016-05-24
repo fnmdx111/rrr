@@ -67,7 +67,8 @@ append_wavefront_object(struct r_aarr *buf, const char *fn)
 
   p31v this_vtx;
   r_surf this_tri;
-  size_t p, q, r;
+  int p, q, r;
+  char __;
 
   f = fopen(fn, "r");
   while (1) {
@@ -79,14 +80,14 @@ append_wavefront_object(struct r_aarr *buf, const char *fn)
 
     switch (line[0]) {
     case 'v':
-      sscanf(line, FPFMT " " FPFMT " " FPFMT,
-             &this_vtx.x, &this_vtx.y, &this_vtx.z);
+      sscanf(line, "%c " FPFMT " " FPFMT " " FPFMT "\n",
+             &__, &this_vtx.x, &this_vtx.y, &this_vtx.z);
       vtxs[vcnt] = this_vtx;
       ++vcnt;
       break;
 
     case 'f':
-      sscanf(line, "%ld %ld %ld", &p, &q, &r);
+      sscanf(line, "%c %d %d %d\n", &__, &p, &q, &r);
       --p; --q; --r;
 
       this_tri.type = SURF_TRIANGLE;
