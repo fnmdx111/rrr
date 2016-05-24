@@ -14,6 +14,10 @@ mtr_buf = RLMaterialBuf.new()
 
 scene = RLScene.new(surf_buf, light_buf, mtr_buf, cam)
 
+print(scene:surf_buf())
+print(scene:surf_buf())
+print(scene:surf_buf():add_surface())
+
 
 --
 --scene:install_surf_buf(surf_buf)
