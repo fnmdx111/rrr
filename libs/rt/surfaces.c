@@ -149,5 +149,13 @@ hit(r_surf* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
 void
 make_surf_tri(r_surf_triangle* tri, p31v* p, p31v* q, p31v* r)
 {
+  tri->p = *p;
+  tri->q = *q;
+  tri->r = *r;
 
+  v31v pq, pr;
+  v1_sub(&pq, q, p);
+  v1_sub(&pr, r, p);
+
+  v1_cross(&tri->n, &pq, &pr);
 }
