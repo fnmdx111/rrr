@@ -45,6 +45,15 @@ const struct luaL_Reg rl_mtr_buf_funcs[] = {
   {NULL, NULL}
 };
 
+int
+__tostring_buf(lua_State* L)
+{
+  struct rl_g_buf* g = lua_touserdata(L, 1);
+  lua_pushfstring(L, "rl_*_buf <%p> of size %d", g, g->hnd->size);
+
+  return 1;
+}
+
 void
 install_buf_metatables(lua_State* L)
 {
@@ -59,6 +68,8 @@ install_buf_metatables(lua_State* L)
    */
   lua_pushcfunction(L, __gc_buf);
   lua_setfield(L, -2, "__gc");
+  lua_pushcfunction(L, __tostring_buf);
+  lua_setfield(L, -2, "__tostring");
 
   /**
    * Class methods:
@@ -82,6 +93,8 @@ install_buf_metatables(lua_State* L)
 
   lua_pushcfunction(L, __gc_buf);
   lua_setfield(L, -2, "__gc");
+  lua_pushcfunction(L, __tostring_buf);
+  lua_setfield(L, -2, "__tostring");
 
   lua_pushcfunction(L, l_create_light_buf);
   lua_setfield(L, -2, "new");
@@ -97,6 +110,8 @@ install_buf_metatables(lua_State* L)
 
   lua_pushcfunction(L, __gc_buf);
   lua_setfield(L, -2, "__gc");
+  lua_pushcfunction(L, __tostring_buf);
+  lua_setfield(L, -2, "__tostring");
 
   lua_pushcfunction(L, l_create_material_buf);
   lua_setfield(L, -2, "new");
