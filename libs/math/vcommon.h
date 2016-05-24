@@ -17,4 +17,7 @@ v1_tovp4(v34v* r, v31v* p);
 void
 p_v34v(v34v* r);
 
+void
+p_v31v(v31v* r);
+
 #endif //RRR_VCOMMON_H

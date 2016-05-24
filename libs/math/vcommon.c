@@ -51,3 +51,10 @@ p_v34v(v34v* r)
   p_fp4v(&r->ys); printf(";\n");
   p_fp4v(&r->zs); printf(";");
 }
+
+void
+p_v31v(v31v* r)
+{
+  printf("(" FPFMT "," FPFMT "," FPFMT ")",
+         r->x, r->y, r->z);
+}
