@@ -15,4 +15,10 @@ struct vec3
 typedef struct vec3 v31v;
 typedef struct vec3 p31v;
 
+void
+v1_cross(v31v* r, v31v* p, v31v* q);
+
+void
+v1_sub(v31v* r, v31v* p, v31v* q);
+
 #endif //RRR_VEC_H
