@@ -9,7 +9,7 @@
 #include "../rt/surfaces.h"
 #include "../rt/lights.h"
 #include "../rt/scene.h"
-#include "scommon.h.h"
+#include "scommon.h"
 
 int
 close_buf(lua_State* L)

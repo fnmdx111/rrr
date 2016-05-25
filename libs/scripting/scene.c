@@ -7,7 +7,7 @@
 #include "lualib.h"
 #include "scene.h"
 #include "obj_buf.h"
-#include "scommon.h.h"
+#include "scommon.h"
 
 const static struct luaL_Reg rl_scene_funcs[] = {
   {"render", l_render},

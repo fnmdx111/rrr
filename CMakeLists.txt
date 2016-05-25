@@ -6,7 +6,7 @@ find_package(SSE REQUIRED)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11 -msse4.2")
 
-set(SCRIPTING_SRC_FILES libs/scripting/scene.c libs/scripting/scene.h libs/scripting/obj_buf.c libs/scripting/obj_buf.h libs/scripting/scommon.h.h)
+set(SCRIPTING_SRC_FILES libs/scripting/scene.c libs/scripting/scene.h libs/scripting/obj_buf.c libs/scripting/obj_buf.h libs/scripting/scommon.h)
 set(MATH_SRC_FILES libs/math/vecp.c libs/math/vecp.h libs/math/vec.c libs/math/vec.h libs/math/vcommon.c libs/math/vcommon.h libs/math/common.h libs/math/common.c)
 set(GENERIC_SRC_FILES libs/generic/aarr.c libs/generic/aarr.h)
 set(RT_SRC_FILES libs/rt/ray_pk4.c libs/rt/ray_pk4.h libs/rt/surfaces.c libs/rt/surfaces.h libs/rt/scene.c libs/rt/scene.h libs/rt/lights.c libs/rt/lights.h)
