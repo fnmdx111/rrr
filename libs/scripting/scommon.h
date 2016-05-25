@@ -2,8 +2,8 @@
 // Created by wo on 5/24/16.
 //
 
-#ifndef RRR_SCOMMON_H_H
-#define RRR_SCOMMON_H_H
+#ifndef RRR_SCOMMON_H
+#define RRR_SCOMMON_H
 
 #define s_getf(which, idx, key) do {\
   lua_getfield(L, idx, #key);\
@@ -18,4 +18,4 @@
 #define s_get_fp1v(idx) ((float) lua_tonumber(L, idx))
 #define s_get_int(idx) ((int) lua_tonumber(L, idx))
 
-#endif //RRR_SCOMMON_H_H
+#endif //RRR_SCOMMON_H
