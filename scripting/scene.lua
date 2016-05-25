@@ -12,13 +12,32 @@ surf_buf = RLSurfaceBuf.new()
 light_buf = RLLightBuf.new()
 mtr_buf = RLMaterialBuf.new()
 
-scene = RLScene.new(surf_buf, light_buf, mtr_buf, cam)
+surf_buf:add_triangle(
+    {x=1, y=1, z=1},
+    {x=2, y=2, z=2},
+    {x=3, y=3, z=3}
+)
+surf_buf:add_sphere(v3(1, 1, 1), 5)
 
-print(scene:surf_buf())
-print(scene:surf_buf())
-print(scene:surf_buf():add_surface())
+light_buf:add_point_light(v3(1, 1, 1), v3(0.2, 0.2, 0.2))
+
+scene = RLScene.new()
+scene:install_surf_buf(surf_buf)
+scene:install_light_buf(light_buf)
+scene:install_material_buf(mtr_buf)
+scene:install_camera(cam)
+
+surf_buf:append_wavefront_object('bunny_regular.obj')
+
+mtr_buf:add_phongbling(
+    v3(0.7, 0.0, 0.0),
+    v3(0.5, 0.5, 0.5), 100,
+    v3(0.0, 0.0, 0.0),
+    50,
+    v3(1.0, 1.0, 1.0), 1.25)
 
 
+scene:render()
 --
 --scene:install_surf_buf(surf_buf)
 

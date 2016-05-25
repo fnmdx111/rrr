@@ -90,8 +90,7 @@ append_wavefront_object(struct r_aarr *buf, const char *fn)
       sscanf(line, "%c %d %d %d\n", &__, &p, &q, &r);
       --p; --q; --r;
 
-      this_tri.type = SURF_TRIANGLE;
-      make_surf_tri(&(this_tri.triangle),
+      make_surf_tri(&this_tri,
                     &vtxs[p], &vtxs[q], &vtxs[r]);
 
       aarr_push(buf, r_surf, &this_tri);

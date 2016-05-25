@@ -4,6 +4,7 @@
 
 #include "surfaces.h"
 #include "../portable.h"
+#include "../math/common.h"
 
 i4v
 hit_aabb(r_aabb* aabb, rp4* ray, fp1v t0, fp1v t1)
@@ -147,8 +148,21 @@ hit(r_surf* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1)
 }
 
 void
-make_surf_tri(r_surf_triangle* tri, p31v* p, p31v* q, p31v* r)
+make_surf_tri(r_surf* surf, p31v* p, p31v* q, p31v* r)
 {
+  surf->type = SURF_TRIANGLE;
+
+  r_aabb* aabb = &surf->aabb;
+#define _set_aabb(axis)\
+  aabb->axis ## min = min3(p->axis, q->axis, r->axis);\
+  aabb->axis ## max = max3(p->axis, q->axis, r->axis)
+
+  _set_aabb(x);
+  _set_aabb(y);
+  _set_aabb(z);
+#undef _set_aabb
+
+  r_surf_triangle* tri = &surf->triangle;
   tri->p = *p;
   tri->q = *q;
   tri->r = *r;
@@ -158,4 +172,25 @@ make_surf_tri(r_surf_triangle* tri, p31v* p, p31v* q, p31v* r)
   v1_sub(&pr, r, p);
 
   v1_cross(&tri->n, &pq, &pr);
+}
+
+void
+make_surf_sph(r_surf* sph, p31v* o, fp1v* r)
+{
+  sph->type = SURF_SPHERE;
+
+  fp1v rr = *r;
+  r_aabb* aabb = &sph->aabb;
+
+#define _set_aabb(axis)\
+  aabb->axis ## min = o->axis - rr;\
+  aabb->axis ## max = o->axis + rr
+
+  _set_aabb(x);
+  _set_aabb(y);
+  _set_aabb(z);
+#undef _set_aabb
+
+  sph->sphere.o = *o;
+  sph->sphere.r = rr;
 }

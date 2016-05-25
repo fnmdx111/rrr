@@ -9,19 +9,19 @@
 
 struct r_ambient_light
 {
-  v31v color;
+  c31v color;
 };
 
 struct r_point_light
 {
   p31v pos;
-  v31v color;
+  c31v color;
 };
 
 struct r_direction_light
 {
   v31v dir;
-  v31v color;
+  c31v color;
 };
 
 struct r_area_light
@@ -30,8 +30,9 @@ struct r_area_light
 
 enum r_light_type
 {
-  AMBIENT, POINT, DIRECTION, AREA
+  LIGHT_AMBIENT, LIGHT_POINT, LIGHT_DIRECTION, LIGHT_AREA
 };
+
 struct light
 {
   enum r_light_type type;

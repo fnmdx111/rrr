@@ -7,6 +7,7 @@
 #include "lualib.h"
 #include "scene.h"
 #include "obj_buf.h"
+#include "scommon.h.h"
 
 const static struct luaL_Reg rl_scene_funcs[] = {
   {"render", l_render},
@@ -124,16 +125,25 @@ l_create_scene(lua_State* L)
     lights = check_light_buf(L, 2);
     mtrs = check_material_buf(L, 3);
     camera = check_camera(L, 4);
+  } else if (argc == 3) {
+    surfs = check_surf_buf(L, 1);
+    lights = check_light_buf(L, 2);
+    mtrs = check_material_buf(L, 3);
+  } else if (argc == 1) {
+    camera = check_camera(L, 1);
   }
 
   struct rl_scene* s = lua_newuserdata(L, sizeof(struct rl_scene));
 
   luaL_setmetatable(L, RL_SCENE_METATABLE_KEY);
 
-  if (argc == 4) {
+  if (surfs && lights && mtrs) {
     s->hnd.surfs = surfs->hnd;
     s->hnd.lights = lights->hnd;
     s->hnd.materials = mtrs->hnd;
+  }
+
+  if (camera) {
     s->hnd.cam = RL_CAMP(camera);
   }
 
@@ -188,41 +198,25 @@ l_install_material_buf(lua_State* L)
 int
 l_create_camera(lua_State* L)
 {
-#define getf(which, idx, key) do {\
-  lua_getfield(L, idx, #key);\
-  (which).key = (float) lua_tonumber(L, -1);\
-  lua_pop(L, 1);\
-} while (0)
-#define get_v31v(name, idx) do {\
-  getf(name, idx, x);\
-  getf(name, idx, y);\
-  getf(name, idx, z);\
-} while (0)
-#define get_fp1v(idx) ((float) lua_tonumber(L, idx))
-
   v31v pos;
-  get_v31v(pos, 1);
+  s_get_v31v(pos, 1);
   v31v dir;
-  get_v31v(dir, 2);
-  fp1v d = get_fp1v(3);
-  fp1v img_w = get_fp1v(4);
-  fp1v img_h = get_fp1v(5);
+  s_get_v31v(dir, 2);
+  fp1v d = s_get_fp1v(3);
+  fp1v img_w = s_get_fp1v(4);
+  fp1v img_h = s_get_fp1v(5);
   int pxl_w = (int) lua_tonumber(L, 6);
   int pxl_h = (int) lua_tonumber(L, 7);
 
+  fp1v lens = 1e-8;
+  fp1v aperture_size = 1e-8;
 
-  fp1v lens;
-  if (lua_isnoneornil(L, 8)) {
-    lens = 1e-8f;
-  } else {
-    lens = get_fp1v(8);
+  int topn = lua_gettop(L);
+  if (topn >= 9) {
+    aperture_size = s_get_fp1v(9);
   }
-
-  fp1v aperture_size;
-  if (lua_isnoneornil(L, 9)) {
-    aperture_size = 1e-8f;
-  } else {
-    aperture_size = get_fp1v(9);
+  if (topn >= 8) {
+    lens = s_get_fp1v(8);
   }
 
   struct rl_camera* c = lua_newuserdata(L, sizeof(struct rl_camera));
@@ -235,9 +229,6 @@ l_create_camera(lua_State* L)
   luaL_setmetatable(L, RL_CAMERA_METATABLE_KEY);
 
   return 1;
-#undef getf
-#undef get_fp1v
-#undef get_v31v
 }
 
 int

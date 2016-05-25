@@ -41,7 +41,7 @@ typedef float  fp1v;
 #define LT_MASK_fp4v(a, b) CMP_MASK_fp4v(a, b, 17)
 #define GT_MASK_fp4v(a, b) CMP_MASK_fp4v(a, b, 30)
 #define XOR_fp4v(a, b) _mm_xor_ps(a, b)
-#define NEG_fp4v(a)  SUB_fp4v(SET1_fp4v(0.0), a)
+#define NEG_fp4v(a)  XOR_fp4v(a, SET1_fp4v(-0.0f))
 #define SQRT_fp4v(a) _mm_sqrt_ps(a)
 #define EXTR_fp4v(a, i) _mm_extract_ps(a, i)
 

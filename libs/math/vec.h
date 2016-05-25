@@ -14,6 +14,7 @@ struct vec3
 
 typedef struct vec3 v31v;
 typedef struct vec3 p31v;
+typedef struct vec3 c31v;
 
 void
 v1_cross(v31v* r, v31v* p, v31v* q);

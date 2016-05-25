@@ -96,6 +96,9 @@ main(int argc, char** argv)
 
   struct rl_scene* s = check_scene(L, -1);
   p_v34v(&(s->hnd.cam->dir));
+  p_v31v(&(aarr_idx(s->hnd.surfs, r_surf, 0)).triangle.p);
+  p_v31v(&(aarr_idx(s->hnd.surfs, r_surf, 0)).triangle.q);
+  p_v31v(&(aarr_idx(s->hnd.surfs, r_surf, 0)).triangle.r);
 
   lua_close(L);
 

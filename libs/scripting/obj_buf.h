@@ -60,7 +60,19 @@ int
 l_append_wavefront_object(lua_State *L);
 
 int
-l_add_surface(lua_State* L);
+l_add_triangle(lua_State* L);
+
+int
+l_add_sphere(lua_State* L);
+
+int
+l_add_ambient_light(lua_State* L);
+
+int
+l_add_point_light(lua_State* L);
+
+int
+l_add_phongbling(lua_State* L);
 
 void
 create_wrapper(lua_State* L, struct rl_g_buf* buf, const char* mt_key);

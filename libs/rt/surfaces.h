@@ -76,7 +76,10 @@ struct isect_pk4_t
 typedef struct isect_pk4_t isc4v;
 
 void
-make_surf_tri(r_surf_triangle* tri, p31v* p, p31v* q, p31v* r);
+make_surf_tri(r_surf* surf, p31v* p, p31v* q, p31v* r);
+
+void
+make_surf_sph(r_surf* surf, p31v* o, fp1v* r);
 
 i4v
 hit(r_surf* surf, rp4* ray, isc4v* isc, fp1v t0, fp1v t1);

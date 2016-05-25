@@ -39,7 +39,9 @@ make_camera(r_camera* cam,
 
 struct r_mtr_phong_bling
 {
-
+  c31v diff, spec, ispec, refr;
+  int spec_r, glossy;
+  fp1v nidx;
 };
 
 struct r_mtr_custom_shading
@@ -49,8 +51,8 @@ struct r_mtr_custom_shading
 
 enum r_mtr_type
 {
-  PHONG_BLING,
-  CUSTOM
+  MTR_PHONG_BLING,
+  MTR_CUSTOM
 };
 struct material
 {
